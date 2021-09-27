@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useState } from 'react';
+import { generateIndices } from '../../libs/indices';
 import History from '../History';
 
 export type BoardState = Array<'X' | 'O' | undefined>;
@@ -10,23 +11,19 @@ export type HistoryState = Array<{
   id: number;
 }>;
 
-function checkGameBoard(board: BoardState, ...indices: number[]) {
+function checkGameBoard(board: BoardState, size: number, ...indices: number[]) {
   const str = indices.map((index) => board[index]).join('');
-  return str === 'XXX' || str === 'OOO';
+  return (
+    str === Array(size).fill('X').join('') ||
+    str === Array(size).fill('O').join('')
+  );
 }
 
-const WIN_INDICES = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6],
-];
+interface Props {
+  gameboard: number;
+}
 
-export default function GameBoard() {
+export default function GameBoard({ gameboard }: Props) {
   const [isCurrentPlayerX, setIsCurrentPlayerX] = useState(false);
   const [winIndices, setWinIndices] = useState<Array<number>>();
 
@@ -35,7 +32,11 @@ export default function GameBoard() {
   const [isViewingHistory, setIsViewingHistory] = useState(false);
 
   const [history, setHistory] = useState<HistoryState>(() => [
-    { id: Date.now(), data: Array(9).fill(undefined), location: null },
+    {
+      id: Date.now(),
+      data: Array(gameboard * gameboard).fill(undefined),
+      location: null,
+    },
   ]);
 
   const [selectedHistory, setSelectedHistory] = useState<HistoryState[number]>(
@@ -60,23 +61,29 @@ export default function GameBoard() {
     [isCurrentPlayerX, isWin, selectedHistory]
   );
 
+  console.log(generateIndices(4));
+
   const reset = useCallback(() => {
     setIsWin(false);
     setIsDraw(false);
     setIsViewingHistory(false);
     setWinIndices([]);
     setHistory([
-      { id: Date.now(), data: Array(9).fill(undefined), location: null },
+      {
+        id: Date.now(),
+        data: Array(gameboard * gameboard).fill(undefined),
+        location: null,
+      },
     ]);
-  }, []);
+  }, [gameboard]);
 
   useEffect(() => {
     setSelectedHistory(history[history.length - 1]);
   }, [history]);
 
   useEffect(() => {
-    const win = WIN_INDICES.find((item) =>
-      checkGameBoard(selectedHistory.data, ...item)
+    const win = generateIndices(gameboard).find((item) =>
+      checkGameBoard(selectedHistory.data, gameboard, ...item)
     );
 
     if (win) {
@@ -88,11 +95,13 @@ export default function GameBoard() {
     if (selectedHistory.data.every((item) => item !== undefined)) {
       setIsDraw(true);
     }
-  }, [selectedHistory]);
+  }, [selectedHistory, gameboard]);
+
+  console.log(generateIndices(4));
 
   return (
     <div className="min-h-screen grid place-content-center">
-      <div className="font-medium text-2xl">Tic Tac Toe</div>
+      <div className="font-medium text-2xl">The Tic Tac Toe Game</div>
 
       {isDraw && (
         <div>
@@ -105,8 +114,11 @@ export default function GameBoard() {
       )}
 
       <div className="flex gap-4 mt-3">
-        <div className="grid grid-cols-3 w-96 shadow-md">
-          {Array(9)
+        <div
+          className={`grid grid-cols-${gameboard} shadow-md`}
+          style={{ width: gameboard * 126 + 'px' }}
+        >
+          {Array(gameboard * gameboard)
             .fill('')
             .map((_, index) => (
               <div
