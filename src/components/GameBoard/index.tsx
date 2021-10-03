@@ -82,7 +82,7 @@ export default function GameBoard({ gameboard }: Props) {
   }, [history]);
 
   useEffect(() => {
-    const win = generateIndices(gameboard).find((item) =>
+    const win = generateIndices(Math.min(5, gameboard)).find((item) =>
       checkGameBoard(selectedHistory.data, gameboard, ...item)
     );
 
@@ -96,8 +96,6 @@ export default function GameBoard({ gameboard }: Props) {
       setIsDraw(true);
     }
   }, [selectedHistory, gameboard]);
-
-  console.log(generateIndices(4));
 
   return (
     <div className="min-h-screen grid place-content-center">
