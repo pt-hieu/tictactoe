@@ -115,8 +115,11 @@ export default function GameBoard({ gameboard }: Props) {
 
       <div className="flex gap-4 mt-3">
         <div
-          className={`grid grid-cols-${gameboard} shadow-md`}
-          style={{ width: gameboard * 126 + 'px' }}
+          className="grid shadow-md"
+          style={{
+            width: gameboard * 126 + 'px',
+            gridTemplateColumns: `repeat(${gameboard}, minmax(0, 1fr)`,
+          }}
         >
           {Array(gameboard * gameboard)
             .fill('')

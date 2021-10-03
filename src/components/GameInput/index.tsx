@@ -12,7 +12,7 @@ export default function GameInput({ onSubmit: setGameBoard }: Props) {
   }, []);
 
   const submitGameboard = useCallback(() => {
-    if (size < 3 || size > 5) {
+    if (size < 3) {
       alert('Invalid size');
       return;
     }
@@ -28,7 +28,10 @@ export default function GameInput({ onSubmit: setGameBoard }: Props) {
       <label htmlFor="size" className="my-2 font-medium ">
         Please input your desired game board
         <br />
-        (only support 3x3, 4x4, 5x5, due to limited screen size):
+        (Plese notice, the best screen sizes are 3x3, 4x4 and 5x5, we still
+        support up to 20x20 but any screen size bigger than the supported ones
+        will cause the screen to overflow, the UX will be downgrade as a
+        consequence):
       </label>
       <input
         type="number"
