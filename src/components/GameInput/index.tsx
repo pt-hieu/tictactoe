@@ -28,8 +28,8 @@ export default function GameInput({ onSubmit: setGameBoard }: Props) {
       <label htmlFor="size" className="my-2 font-medium ">
         Please input your desired game board
         <br />
-        (Plese notice, the best screen sizes are 3x3, 4x4 and 5x5, we still
-        support up to 20x20 but any screen size bigger than the supported ones
+        (Plese notice, the best screen sizes are 3x3, 4x4 and 5x5, we still have
+        sizes up to 20x20 but any screen size bigger than the supported ones
         will cause the screen to overflow, the UX will be downgrade as a
         consequence):
       </label>
